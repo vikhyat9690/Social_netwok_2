@@ -1,13 +1,3 @@
-
-    function previewImage(event) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const preview = document.getElementById('preview');
-            preview.src = reader.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-
 $(document).ready(function () {
     //for signup form
     $("#signupForm").submit(function (e) {
@@ -25,7 +15,33 @@ $(document).ready(function () {
             success: function (response) {
                 if(response.status === 'success') {
                     $("#responseMsg").text(response.message).addClass('success');
-                    window.location.href = "login.php";
+                    
+                } else {
+                    $("#responseMsg").text(response.message).addClass('error');
+                }
+            }
+        });
+    })
+
+    //for login form
+    $("#loginForm").submit(function(e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        $.ajax({
+            type: "POST",
+            url: "../handlers/loginHandler.php",
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (response) {
+                if(response.status === 'success') {
+                    $("#responseMsg").text(response.message).addClass('success');
+                    setTimeout(function() {
+                        window.location.href = "profile.php";
+                    }, 2000)
                 } else {
                     $("#responseMsg").text(response.message).addClass('error');
                 }
@@ -33,3 +49,12 @@ $(document).ready(function () {
         });
     })
 })
+
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        const preview = document.getElementById('preview');
+        preview.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}

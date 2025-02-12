@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script src="https://code.jquery.com/jquery-6.3.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="../assets/css/auth.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,10 +26,11 @@
                 <button style="padding: 13px; font-size: 20px" type="submit" id="submitBtn">Log In</button><br>
                 <span class="create-acc">Don't have account? <a href="signup.php">Create Account</a></span>
                 
+                <span style="text-align: center;" id="responseMsg"></span>
             </form>
-            <span id="responseMsg"></span>
         </div>
     </div>
+    <script src="../scripts/auth.js"></script>
 </body>
 
 </html>

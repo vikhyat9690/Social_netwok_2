@@ -1,0 +1,198 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #E8EAF6;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* Main Container */
+.main-container {
+    display: flex;
+    margin-top: 20px;
+    width: 70%;
+}
+
+/* Profile Section */
+.profile-container {
+    width: 25%;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+}
+
+.profile-picture {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 10px;
+}
+
+.profile-picture img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.edit-icon {
+    cursor: pointer;
+    font-size: 14px;
+    color: gray;
+}
+
+.profile-details h2 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.profile-details p {
+    margin: 5px 0;
+}
+
+.share-profile {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Post Section */
+.post-container {
+    width: 70%;
+}
+
+.add-post {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 100%; /* Ensure it fits inside the parent */
+    box-sizing: border-box; /* Prevents overflow due to padding */
+}
+
+.add-post textarea {
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    box-sizing: border-box; /* Prevents padding from increasing size */
+}
+
+.add-post input[type="file"] {
+    display: block;
+    margin: 10px 0;
+    width: 100%;
+}
+
+.add-post button {
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* Make the button responsive */
+    box-sizing: border-box;
+}
+
+
+.posts-container {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.post {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post img {
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.post-actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #3b82f6;
+    font-size: 14px;
+}
+
+.like-btn,
+.dislike-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Logout Button */
+.logout-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.logout-btn:hover {
+    background: #d32f2f;
+}
+
+#imagePreviewContainer {
+    position: relative;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#imagePreview {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#removeImage {
+    position: absolute;
+    top: 5px;
+    height: 30px;
+    width: 70px;
+    right: 5px;
+    background: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8%;
+    text-align: center;
+}
+
+#removeImage:hover{
+    background-color: #d32f2f;
+}

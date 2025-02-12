@@ -2,7 +2,7 @@
     require "../config/db.php";
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $fullname = trim($_POST['fullname']);
+        $fullname = $_POST['fullname'];
         $dob = $_POST['dob'];
         $email = trim( $_POST['email']);
         $password = $_POST['password'];
@@ -17,6 +17,7 @@
 
         if($checkstmt->num_rows > 0) {
             echo json_encode(["status" => "error", "message" => "User already exists with this email"]);
+            exit;
         }
 
         $checkstmt->close();
@@ -25,7 +26,7 @@
         if($password === $rePassword) {
             $password = password_hash($password, PASSWORD_BCRYPT);
         } else {
-            json_encode(["status" => "error", "message" => "Password doesn't match"]);
+            echo json_encode(["status" => "error", "message" => "Password doesn't match"]);
             exit;
         }
         

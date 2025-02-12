@@ -48,7 +48,7 @@
 
                 <button style="font-size: large;" type="submit" id="submitBtn">Sign Up</button><br>
                 <span style="text-align: center; color: gray;">Already User? <a style="color: #0056b3;" href="login.php">Login</a></span>
-                <span id="responseMsg"></span>
+                <span style="text-align: center;" id="responseMsg"></span>
             </form>
         </div>
     </div>
