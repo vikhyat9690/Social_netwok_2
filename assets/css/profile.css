@@ -187,12 +187,12 @@ textarea {
 
 #logoutBtn{
     width: 100px;
-    margin-left: 82%;
+
     margin-bottom: 20px;
     background-color: rgba(255, 0, 0, 0.798);
     border: none;
     padding: 5px;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 #logoutBtn:hover{
@@ -210,4 +210,97 @@ textarea {
     justify-content: center;
     align-items: center;
     gap: 10px;
+}
+
+.post-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top: -14px;
+}
+
+.name-pic img{
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.name-pic{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.name-pic span{
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.post-header button{
+    border: none;
+    background-color: transparent;
+    font-size: medium;
+    cursor: pointer;
+}
+
+.post-actions{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 20px;
+}
+
+.post-actions button{
+    border: none;
+    background-color: transparent;
+    font-size: medium;
+    cursor: pointer;
+    color: #007bff;
+}
+
+.post-actions button:hover{
+    color: #0052a3;
+    text-decoration: none;
+}
+
+.post-image{
+    height: 300px;
+    width: 600px;
+    object-fit: cover;
+}
+
+.logout-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-btn{
+    padding: 5px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    border: none;
+    width: 100px;
+    margin-top: 20px;
+}
+
+.post-btn:hover{
+    background-color: #0052a3;
+    cursor: pointer;
+}
+
+.input-container-upload{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-image-label{
+    color: #007bff;
+    font-weight: bold;
+    cursor: pointer;
 }

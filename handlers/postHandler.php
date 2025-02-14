@@ -10,38 +10,38 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 //For creating post
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $description = isset($_POST['description']) ? trim($_POST['description']) : "+-----+";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['post_id'])) {
+    $description = isset($_POST['description']) ? trim($_POST['description']) : "";
     $post_image = NULL;
+    
     if (isset($_FILES['post_image']) && $_FILES['post_image']['size'] > 0) {
         $targetDir = "../assets/posts/";
         $relativeDir = "/assets/posts/";
         $fileName = time() . "_" . basename($_FILES['post_image']['name']);
         $targetFile = $targetDir . $fileName;
 
-        // Move uploaded file
         if (move_uploaded_file($_FILES['post_image']['tmp_name'], $targetFile)) {
             $post_image = $relativeDir . $fileName;
         } else {
-            echo json_encode(["status" => "error", "message" => "Error uploading profile picture"]);
+            echo json_encode(["status" => "error", "message" => "Error uploading image"]);
             exit;
         }
     }
 
-    $stmt = $conn->prepare("insert into posts (user_id, description, image) values (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO posts (user_id, description, image) VALUES (?, ?, ?)");
     $stmt->bind_param("iss", $userId, $description, $post_image);
-    if($stmt->execute()) {
+    
+    if ($stmt->execute()) {
         echo json_encode(["status" => "success", "message" => "Post created successfully"]);
-        exit;
     } else {
-        echo json_encode(["status" => "error", "message" => "Failed to created post"]);
-        exit;
+        echo json_encode(["status" => "error", "message" => "Failed to create post: " . $stmt->error]);
     }
+    exit;
 }
 
-//For Fetching all posts
-if($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $stmt = $conn->prepare("select posts.*, users.fullname, users.profile_picture from posts join users on posts.user_id = users.id order by posts.created_at desc");
+//For fetching all posts
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $stmt = $conn->prepare("SELECT posts.*, users.fullname, users.profile_picture FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC");
     $stmt->execute();
     $result = $stmt->get_result();
     $posts = $result->fetch_all(MYSQLI_ASSOC);
@@ -50,51 +50,50 @@ if($_SERVER['REQUEST_METHOD'] === 'GET') {
     exit;
 }
 
-
-//handling likes and dislikes
-if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($_POST['reaction'])) {
+// Handling likes and dislikes
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($_POST['reaction'])) {
     $postId = $_POST['post_id'];
     $reaction = $_POST['reaction'];
 
-    //If user already reacted then
-    $stmt = $conn->prepare("select reaction from post_reactions where user_id = ? and post_id = ?");
+    // Check if user already reacted
+    $stmt = $conn->prepare("SELECT reaction FROM post_reaction WHERE user_id = ? AND post_id = ?");
     $stmt->bind_param('ii', $userId, $postId);
     $stmt->execute();
     $result = $stmt->get_result();
     $existingReaction = $result->fetch_assoc();
 
-
-    if($existingReaction) {
-        if($existingReaction['reaction'] === $reaction) {
-            //removing reaction if clicked again
-            $stmt = $conn->prepare("delete from post_reactions where user_id = ? and post_id = ?");
+    if ($existingReaction) {
+        if ($existingReaction['reaction'] === $reaction) {
+            // Remove reaction if clicked again
+            $stmt = $conn->prepare("DELETE FROM post_reaction WHERE user_id = ? AND post_id = ?");
             $stmt->bind_param('ii', $userId, $postId);
             $stmt->execute();
 
             $updateField = ($reaction === 'like') ? "likes" : "dislikes";
-            $conn->query("update posts set $updateField = $updateField - 1 where id = $postId");
+            $conn->query("UPDATE posts SET $updateField = GREATEST($updateField - 1, 0) WHERE id = $postId");
         } else {
-            //update reaction if different reaction is clickied
-            $stmt = $conn->prepare("update posts.reactions set reaction = ? where user_id = ? and post_id = ?");
+            // Update reaction if different reaction is clicked
+            $stmt = $conn->prepare("UPDATE post_reaction SET reaction = ? WHERE user_id = ? AND post_id = ?");
             $stmt->bind_param('sii', $reaction, $userId, $postId);
             $stmt->execute();
 
-            $likeChange =  ($reation === 'like') ? '+1' : '-1';
-            $dislikeChange = ($reaction === 'dislike') ? '+1' : '-1';
-
-            $conn->query("update posts set likes = likes $likeChange , dislikes = dislikes $dislikeChange where id = $postId");
+            if ($reaction === 'like') {
+                $conn->query("UPDATE posts SET likes = likes + 1, dislikes = GREATEST(dislikes - 1, 0) WHERE id = $postId");
+            } else {
+                $conn->query("UPDATE posts SET dislikes = dislikes + 1, likes = GREATEST(likes - 1, 0) WHERE id = $postId");
+            }
         }
     } else {
-        //insert new reaction
-        $stmt = $conn->prepare("insert into post_reaction (user_id, post_id, reaction) values (?, ?, ?)");
+        // Insert new reaction
+        $stmt = $conn->prepare("INSERT INTO post_reaction (user_id, post_id, reaction) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $userId, $postId, $reaction);
         $stmt->execute();
 
-
         $updateField = ($reaction === 'like') ? "likes" : "dislikes";
-
-        $conn->query("update posts set $updateField = $updateField + 1 where id = $postId");
+        $conn->query("UPDATE posts SET $updateField = $updateField + 1 WHERE id = $postId");
     }
+
     echo json_encode(["status" => "success", "message" => "Reaction updated"]);
     exit;
 }
+?>

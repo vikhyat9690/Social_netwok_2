@@ -71,7 +71,7 @@ $(document).ready(function () {
             processData: false,
             dataType: "json",
             success: function (response) {
-                if(response.status === 'success') {
+                if (response.status === 'success') {
                     $("postForm")[0].reset();
                     $("#imagePreview").hide();
                     $("#imagePreviewContainer").hide();
@@ -81,7 +81,7 @@ $(document).ready(function () {
         });
     })
 
-    $("#postSubmitBtn").on('click', function() {
+    $("#postSubmitBtn").on('click', function () {
         window.location.href = "../pages/profile_posts.php";
     })
 
@@ -97,17 +97,19 @@ $(document).ready(function () {
 
                 posts.forEach(post => {
                     html += `
-                        <div class = "post-card" data-id="$(post_id)">
+                        <div class = "post-card" data-id="$(post.id)">
                             <div class="post-header">
-                                <img src="../${post.profile_picture} class="profile-pic">
-                                <span>${post.fullname}</span>
-                                <button class="delete-btn" data-id="${post.id}">❌</button>
+                                <div class="name-pic">
+                                    <img src="../${post.profile_picture}" class="profile-pic">
+                                    <span>${post.fullname}</span>
+                                </div>
+                                <button class="delete-btn" data-id="${post.id}">&#10005</button>
                             </div>
                             <p>${post.description}</p>
                             ${post.image ? `<img src="${post.image}" class="post-image">` : ""}
                             <div class="post-actions">
-                                <button class="like-btn" data-id="${post.id}">👍 ${post.likes}</button>
-                                <button class="dislike-btn" data-id="${post.id}">👎 ${post.dislikes}</button>
+                                <button class="like-btn" data-id="${post.id}">👍 <b>Likes</b> ${post.likes}</button>
+                                <button class="dislike-btn" data-id="${post.id}">👎 <b>Dislikes</b> ${post.dislikes}</button>
                             </div>
                         </div>
                     `
@@ -116,20 +118,58 @@ $(document).ready(function () {
             }
         });
     }
+
+    //Like post
+    $(document).on("click", ".like-btn", function() {
+
+        let postId = $(this).data("id");
+        sendReaction(postId, "like");
+    })
+
+    //Dislike post
+    $(document).on("click", ".dislike-btn", function() {
+
+        let postId = $(this).data("id");
+        sendReaction(postId, "dislike");
+    })
+
+    //function to send reaction
+    function sendReaction(postId, reaction) {
+        $.ajax({
+            type: "POST",
+            url: "../handlers/postHandler.php",
+            data: {
+                post_id: postId,
+                reaction: reaction
+            },
+            dataType: "json",
+            success: function (response) {
+                if(response.status === "success") {
+                    fetchPosts();
+                }
+            }
+        });
+    }
+
+
+    //upload image trigger
+    $("#addImage").on("click", function() {
+        $("#uploadPostImage").click();
+    })
 });
 
 
 
 
-document.getElementById("uploadPostImage").addEventListener('change', function(e) {
+document.getElementById("uploadPostImage").addEventListener('change', function (e) {
     let file = e.target.files[0];
     let preview = document.getElementById("imagePreview");
     let container = document.getElementById("imagePreviewContainer");
 
 
-    if(file) {
+    if (file) {
         let reader = new FileReader();
-        reader.onload = function (event) {  
+        reader.onload = function (event) {
             preview.src = event.target.result;
             preview.style.display = "block";
             container.style.display = "block";
@@ -138,7 +178,7 @@ document.getElementById("uploadPostImage").addEventListener('change', function(e
     }
 })
 
-document.getElementById("removeImage").addEventListener("click", function() {
+document.getElementById("removeImage").addEventListener("click", function () {
     let fileInput = document.getElementById("uploadPostImage");
     let preview = document.getElementById("imagePreview");
     let container = document.getElementById("imagePreviewContainer");
@@ -148,3 +188,4 @@ document.getElementById("removeImage").addEventListener("click", function() {
     container.style.display = "none"; // Hide the container
 
 });
+
