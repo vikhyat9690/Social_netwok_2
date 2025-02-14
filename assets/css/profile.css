@@ -1,125 +1,158 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #E8EAF6;
+/* General Reset */
+* {
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* Main Container */
-.main-container {
+
+/* Container Layout */
+.container {
     display: flex;
-    margin-top: 20px;
-    width: 70%;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #e9ebee;
 }
 
 /* Profile Section */
-.profile-container {
-    width: 25%;
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
+.profile-section {
+    width: 300px;
 }
 
-.profile-picture {
+.profile-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.profile-pic-container {
     position: relative;
     width: 100px;
     height: 100px;
-    margin: 0 auto 10px;
+    margin: 0 auto;
 }
 
-.profile-picture img {
-    width: 100px;
-    height: 100px;
+.profile-pic-container img {
+    width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
 
 .edit-icon {
-    cursor: pointer;
-    font-size: 14px;
-    color: gray;
-}
-
-.profile-details h2 {
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-.profile-details p {
-    margin: 5px 0;
-}
-
-.share-profile {
-    color: blue;
-    text-decoration: underline;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #007bff;
+    color: white;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 50%;
     cursor: pointer;
 }
 
-/* Post Section */
-.post-container {
-    width: 70%;
-}
-
-.add-post {
-    background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-    width: 100%; /* Ensure it fits inside the parent */
-    box-sizing: border-box; /* Prevents overflow due to padding */
-}
-
-.add-post textarea {
+.profile-card input {
     width: 100%;
-    height: 60px;
+    margin: 10px 0;
+    padding: 8px;
+    border: none;
+    background: #f1f1f1;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.profile-card button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#editProfile {
+    background: #007bff;
+    color: white;
+}
+
+#saveProfile {
+    background: #28a745;
+    color: white;
+}
+
+/* Main Section */
+.main-section {
+    flex: 1;
+    max-width: 600px;
+}
+
+.post-form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-form h3 {
+    margin-bottom: 10px;
+}
+
+textarea {
+    width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #ddd;
     border-radius: 5px;
     resize: none;
-    box-sizing: border-box; /* Prevents padding from increasing size */
 }
 
-.add-post input[type="file"] {
-    display: block;
-    margin: 10px 0;
+#uploadPostImage {
+    margin-top: 10px;
+}
+
+#imagePreviewContainer {
+    position: relative;
+    margin-top: 10px;
+    display: none;
+}
+
+#imagePreview {
     width: 100%;
-}
-
-.add-post button {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 10px 15px;
     border-radius: 5px;
-    cursor: pointer;
-    width: 100%; /* Make the button responsive */
-    box-sizing: border-box;
 }
 
+#removeImage {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.636);
+    color: white;
+    padding: 2px 5px;
+    font-size: 14px;
+    border-radius: 50%;
+    cursor: pointer;
 
-.posts-container {
+    border: 3px solid white;
+}
+
+/* Post Feed */
+.posts {
+    margin-top: 20px;
+}
+
+.post-card {
     background: white;
     padding: 15px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
 }
 
-.post {
-    background: #fff;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.post img {
+.post-card img {
     width: 100%;
     border-radius: 5px;
     margin-top: 10px;
@@ -131,68 +164,50 @@ body {
     margin-top: 10px;
 }
 
-.post-actions button {
-    background: none;
-    border: none;
+.like-btn, .dislike-btn {
+    color: #007bff;
     cursor: pointer;
-    color: #3b82f6;
-    font-size: 14px;
 }
 
-.like-btn,
-.dislike-btn {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+.like-btn:hover, .dislike-btn:hover {
+    text-decoration: underline;
 }
 
-/* Logout Button */
-.logout-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    background: #f44336;
+.success{
+    text-align: center;
+    color: green;
+    font-weight: bold;
+}
+
+.error{
+    text-align: center;
+    color: red;
+    font-weight: bold;
+}
+
+#logoutBtn{
+    width: 100px;
+    margin-left: 82%;
+    margin-bottom: 20px;
+    background-color: rgba(255, 0, 0, 0.798);
+    border: none;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+#logoutBtn:hover{
+    background-color: rgba(140, 3, 3, 0.869);
+}
+
+#logoutBtn a{
     color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
+    text-decoration: none;
+    font-weight: bold;
 }
 
-.logout-btn:hover {
-    background: #d32f2f;
-}
-
-#imagePreviewContainer {
-    position: relative;
-    margin-top: 10px;
-    display: flex;
+.ageContainer{
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-}
-
-#imagePreview {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-#removeImage {
-    position: absolute;
-    top: 5px;
-    height: 30px;
-    width: 70px;
-    right: 5px;
-    background: #f44336;
-    color: white;
-    border: none;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 8%;
-    text-align: center;
-}
-
-#removeImage:hover{
-    background-color: #d32f2f;
+    gap: 10px;
 }

@@ -40,8 +40,8 @@ $(document).ready(function () {
                 if(response.status === 'success') {
                     $("#responseMsg").text(response.message).addClass('success');
                     setTimeout(function() {
-                        window.location.href = "profile.php";
-                    }, 2000)
+                        window.location.href = "profile_posts.php";
+                    }, 1000)
                 } else {
                     $("#responseMsg").text(response.message).addClass('error');
                 }

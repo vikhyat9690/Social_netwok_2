@@ -4,5 +4,5 @@
     session_destroy();
 
     echo json_encode(["status" => "success", "message" => "Logged out successfully!!"]);
-    exit;
+    exit(1);
 ?>
