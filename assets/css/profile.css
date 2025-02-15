@@ -304,3 +304,9 @@ textarea {
     font-weight: bold;
     cursor: pointer;
 }
+
+#imagePreview{
+    height: 300px;
+    width: 560px;
+    object-fit: cover;
+}

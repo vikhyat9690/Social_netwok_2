@@ -13,7 +13,7 @@ $userId = $_SESSION['user_id'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['post_id'])) {
     $description = isset($_POST['description']) ? trim($_POST['description']) : "";
     $post_image = NULL;
-    
+
     if (isset($_FILES['post_image']) && $_FILES['post_image']['size'] > 0) {
         $targetDir = "../assets/posts/";
         $relativeDir = "/assets/posts/";
@@ -28,9 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['post_id'])) {
         }
     }
 
-    $stmt = $conn->prepare("INSERT INTO posts (user_id, description, image) VALUES (?, ?, ?)");
-    $stmt->bind_param("iss", $userId, $description, $post_image);
     
+    $stmt = $conn->prepare("INSERT into posts (user_id, description, image) values (?, ?, ?)");
+    $stmt->bind_param("iss", $userId, $description, $post_image);
+
     if ($stmt->execute()) {
         echo json_encode(["status" => "success", "message" => "Post created successfully"]);
     } else {
@@ -96,4 +97,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($
     echo json_encode(["status" => "success", "message" => "Reaction updated"]);
     exit;
 }
-?>

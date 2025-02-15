@@ -72,7 +72,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.status === 'success') {
-                    $("postForm")[0].reset();
+                    $("#postForm")[0].reset();
                     $("#imagePreview").hide();
                     $("#imagePreviewContainer").hide();
                     fetchPosts();
@@ -81,9 +81,9 @@ $(document).ready(function () {
         });
     })
 
-    $("#postSubmitBtn").on('click', function () {
-        window.location.href = "../pages/profile_posts.php";
-    })
+    // $("#postSubmitBtn").on('click', function () {
+    //     window.location.href = "../pages/profile_posts.php";
+    // })
 
 
     //fetch posts function
