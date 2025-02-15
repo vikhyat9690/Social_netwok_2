@@ -32,6 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['post_id'])) {
     $stmt = $conn->prepare("INSERT into posts (user_id, description, image) values (?, ?, ?)");
     $stmt->bind_param("iss", $userId, $description, $post_image);
 
+    if($description === "" && $post_image === NULL) {
+        echo json_encode(["status" => "error", "message" => "Nothing to post? Try adding an image."]);
+        exit;
+    }
+
     if ($stmt->execute()) {
         echo json_encode(["status" => "success", "message" => "Post created successfully"]);
     } else {
@@ -42,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['post_id'])) {
 
 //For fetching all posts
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $stmt = $conn->prepare("SELECT posts.*, users.fullname, users.profile_picture FROM posts JOIN users ON posts.user_id = users.id ORDER BY posts.created_at DESC");
+    $stmt = $conn->prepare("SELECT posts.*, users.fullname, users.profile_picture FROM posts JOIN users ON posts.user_id = users.id where users.id = ? ORDER BY posts.created_at desc");
+    $stmt->bind_param('i', $userId);
     $stmt->execute();
     $result = $stmt->get_result();
     $posts = $result->fetch_all(MYSQLI_ASSOC);
@@ -96,4 +102,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($
 
     echo json_encode(["status" => "success", "message" => "Reaction updated"]);
     exit;
+}
+
+//for DELETING posts
+if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
+    $postId = $_POST['post_id'];
+    
+    $stmt = $conn->prepare("SELECT * from posts where id =? and user_id = ?");
+    $stmt->bind_param('ii', $postId, $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $post = $result->fetch_assoc();
+
+    if($post) {
+        //now delete the post
+        $stmt = $conn->prepare("DELETE from posts where id = ?");
+        $stmt->bind_param("i", $postId);
+        if($stmt->execute()) {
+            echo json_encode(["status" => "success", "message" => "Post deleted successfully"]);
+            exit;
+        } else {
+            echo json_encode(["status" => "error", "message" => "Failed to delete post"]);
+            exit;
+        }
+    } else {
+        echo json_encode(["status" => "error", "message" => "Unauthorized action (Cannot delete someones post)"]);
+        exit;
+    }
 }

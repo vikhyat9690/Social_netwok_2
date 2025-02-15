@@ -51,7 +51,7 @@ $age = dateToAge($dob);
                 <form action="../handlers/profileHandler.php" method="post" id="profileForm" enctype="multipart/form-data">
                     <div class="profile-pic-container">
                         <img src="<?php echo $profile_picture; ?>" alt="logo" id="profilePic">
-                        <input type="file" style="display: none;" name="profile_picture" id="updateProfilePicture">
+                        <input type="file" accept="image/*" style="display: none;" name="profile_picture" id="updateProfilePicture">
                         <span class="edit-icon" style="display: none;" id="editIcon">Edit</span>
                     </div>
                     <input style="font-weight: bold; font-size: large;" type="text" name="fullname" id="profileName" value="<?php echo $fullname; ?>" readonly>
@@ -76,11 +76,11 @@ $age = dateToAge($dob);
                     <span><button type="submit" id="logoutBtn"><a href="../handlers/logout.php">Logout</a></button></span>
                 </div>
                 <form action="../handlers/postHandler.php" method="post" id="postForm" enctype="multipart/form-data">
-                    <textarea name="description" id="postContent" placeholder="What's on your mind?"></textarea>
+                    <textarea name="description" id="postContent" oninput="autoResize(this)" placeholder="What's on your mind?"></textarea>
                     <div class="input-container-upload">
                         <div class="input-container">
                             <label class="add-image-label" id="addImage">+Add Image</label>
-                            <input type="file" name="post_image" class="postImageInput" style="display: none;" id="uploadPostImage">
+                            <input type="file" accept="image/*" name="post_image" class="postImageInput" style="display: none;" id="uploadPostImage">
                         </div>
                         <button id="postSubmitBtn" class="post-btn" type="submit">Post</button>
                     </div>

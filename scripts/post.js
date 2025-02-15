@@ -76,15 +76,12 @@ $(document).ready(function () {
                     $("#imagePreview").hide();
                     $("#imagePreviewContainer").hide();
                     fetchPosts();
+                } else {
+                    alert(response.message);
                 }
             }
         });
     })
-
-    // $("#postSubmitBtn").on('click', function () {
-    //     window.location.href = "../pages/profile_posts.php";
-    // })
-
 
     //fetch posts function
     function fetchPosts() {
@@ -156,6 +153,32 @@ $(document).ready(function () {
     $("#addImage").on("click", function() {
         $("#uploadPostImage").click();
     })
+
+
+
+    //Deleting the post
+    $(document).on('click', ".delete-btn", function () {  
+        let postId = $(this).data("id");
+        let postCard = $(this).closest(".post-card");
+
+        if(confirm("Are you sure to delete the post?")) {
+            $.ajax({
+                type: "POST",
+                url: "../handlers/postHandler.php",
+                data: {post_id: postId},
+                dataType: "json",
+                success: function (response) {
+                    if(response.status === 'success') {
+                        postCard.fadeOut(500, function() {
+                            $(this).remove();
+                        });
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+    })
 });
 
 
@@ -189,3 +212,7 @@ document.getElementById("removeImage").addEventListener("click", function () {
 
 });
 
+function autoResize(textarea) {
+    textarea.style.height = "auto"; // Reset height to auto to recalculate
+    textarea.style.height = textarea.scrollHeight + "px"; // Set new height based on content
+}
