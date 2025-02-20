@@ -2,14 +2,13 @@
     require "../config/db.php";
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $fullname = $_POST['fullname'];
-        $dob = $_POST['dob'];
-        $email = trim( $_POST['email']);
+        $fullname = htmlspecialchars($_POST['fullname']);
+        $dob = htmlspecialchars($_POST['dob']);
+        $email = filter_var( $_POST['email'], FILTER_SANITIZE_EMAIL);
         $password = $_POST['password'];
         $rePassword = $_POST['rePassword'];
 
 
-        //check if the users exists
         $checkstmt = $conn->prepare("select * from users where email = ?");
         $checkstmt->bind_param('s', $email);
         $checkstmt->execute();
@@ -20,9 +19,6 @@
             exit;
         }
 
-        $checkstmt->close();
-
-        //Validate password match
         if($password === $rePassword) {
             $password = password_hash($password, PASSWORD_BCRYPT);
         } else {
@@ -31,7 +27,6 @@
         }
         
 
-        //Profile Picture match
         $profile_picture = "/assets/uploads/default.png";
         if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['size'] > 0) {
             $targetDir = "../assets/uploads/";
@@ -40,14 +35,17 @@
             $targetFile = $targetDir . $fileName;
             $imgFileType = strtolower(pathinfo($_FILES['profile_picture']['name'], PATHINFO_EXTENSION));
     
-            // Validate image type
-            $validExtensions = ["jpeg", "jpg", "png", "webp", "gif"];
+            $validExtensions = ["jpeg", "jpg", "png", "webp"];
             if (!in_array($imgFileType, $validExtensions)) {
                 echo json_encode(["status" => "error", "message" => "Invalid image format. Allowed: jpeg, jpg, png, webp, gif"]);
                 exit;
             }
+
+            if($_FILES['profile_picture']['size'] > 2 * 1024 * 1024) {
+                echo json_encode(["status" => "error", "message" => "Image must me less than 2MB"]);
+                exit;
+            }
     
-            // Move uploaded file
             if (move_uploaded_file($_FILES['profile_picture']['tmp_name'], $targetFile)) {
                 $profile_picture = $relativeDir . $fileName;
             } else {
@@ -58,13 +56,17 @@
 
 
 
-        //Execute the query
         $stmt = $conn->prepare("insert into users (fullname, dob, email, password, profile_picture) values (?, ?, ?, ?, ?)");
         $stmt->bind_param('sssss', $fullname, $dob, $email, $password, $profile_picture);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        if($stmt->execute()) {
+            echo json_encode(["status" => "success", "message" => "User Registered Succesfully"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Failed to Register user"]);
+            exit;
+        }
+        
+        $checkstmt->close();
         $stmt->close();
-
-        echo json_encode(["status" => "success", "message" => "User Registered Succesfully"]);
+        $conn->close();
     }
 ?>

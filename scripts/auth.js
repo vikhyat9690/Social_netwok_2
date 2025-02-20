@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    //for signup form
     $("#signupForm").submit(function (e) {
         e.preventDefault();
 
@@ -23,7 +22,6 @@ $(document).ready(function () {
         });
     })
 
-    //for login form
     $("#loginForm").submit(function(e) {
         e.preventDefault();
 

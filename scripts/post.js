@@ -1,26 +1,28 @@
 $(document).ready(function () {
     fetchPosts();
     $("#logoutBtn").click(function () {
-        $.ajax({
-            type: "POST",
-            url: "../handlers/logout.php",
-            success: function () {
-                window.location.href = "login.php";
-            }
-        });
+        if(confirm("Are you sure you want to logout?")) {
+            $.ajax({
+                type: "POST",
+                url: "../handlers/logout.php",
+                success: function () {
+                        alert("Logged out successfully!!");
+                        window.location.href = "../pages/login.php";
+
+                }
+            });
+        }
     });
 
-
-    //Profile update Logic for AJAX
 
     $("#editProfile").click(function () {
-        $("#profileName, #profileAge").prop("readonly", false).focus(); // Enable editing
+        $("#profileName, #profileDob").prop("readonly", false).focus(); 
         $(this).hide();
-        $("#editIcon").show(); // Hide edit button
-        $("#saveProfile").show(); // Show save button
+        $("#editIcon").show(); 
+        $("#saveProfile").show(); 
     });
 
-    $("#profileForm").submit(function (e) {
+    $("#profileForm").on("submit", function (e) {
         e.preventDefault();
         let formData = new FormData(this);
 
@@ -33,30 +35,24 @@ $(document).ready(function () {
             dataType: "json",
             success: function (response) {
                 if (response.status === 'success') {
-                    $("#responseMsg").text(response.message).addClass('success');
                     $("#editProfile").show();
                     $("#saveProfile").hide();
-                    $("#profileName, #profileAge").prop("readonly", true); // Disable editing after saving
-
-                    setTimeout(() => {
-                        window.location.href = "../pages/profile_posts.php";
-                    }, 1000);
+                    $("#profileName, #profileDob").prop("readonly", true); // 
+                    $("#responseMsg").text(response.message).addClass('success').fadeOut(2000);
                 } else {
                     $("#responseMsg").text(response.message).addClass('error');
                 }
-            },
-            error: function (xhr) {
-                console.log("AJAX Error: ", xhr.responseText);
             }
         });
     });
 
-    $("#editIcon").on("click", function () {
+    
+
+    $("#editIcon").click(function () {
         $("#updateProfilePicture").click();
     })
 
 
-    //handle post submission
     $("#postForm").submit(function (e) {
         e.preventDefault();
 
@@ -83,7 +79,6 @@ $(document).ready(function () {
         });
     })
 
-    //fetch posts function
     function fetchPosts() {
         $.ajax({
             type: "GET",
@@ -93,20 +88,24 @@ $(document).ready(function () {
                 let html = "";
 
                 posts.forEach(post => {
+                    let formattedDescription = post.description.replace(/\n/g, "<br>");
                     html += `
                         <div class = "post-card" data-id="$(post.id)">
                             <div class="post-header">
                                 <div class="name-pic">
                                     <img src="../${post.profile_picture}" class="profile-pic">
-                                    <span>${post.fullname}</span>
+                                    <div class="name-date-section">
+                                        <span>${post.fullname}</span>
+                                        <span class="createdAt">Posted on - ${post.created_at}</span>
+                                    </div>
                                 </div>
                                 <button class="delete-btn" data-id="${post.id}">&#10005</button>
                             </div>
-                            <p>${post.description}</p>
+                            <p>${formattedDescription}</p>
                             ${post.image ? `<img src="${post.image}" class="post-image">` : ""}
                             <div class="post-actions">
-                                <button class="like-btn" data-id="${post.id}">👍 <b>Likes</b> ${post.likes}</button>
-                                <button class="dislike-btn" data-id="${post.id}">👎 <b>Dislikes</b> ${post.dislikes}</button>
+                                <button class="like-btn" data-id="${post.id}"><i class="fa fa-thumbs-up" aria-hidden="true"></i><b> Likes</b> ${post.likes}</button>
+                                <button class="dislike-btn" data-id="${post.id}"><i class="fa fa-thumbs-down" aria-hidden="true"></i> <b>Dislikes</b> ${post.dislikes}</button>
                             </div>
                         </div>
                     `
@@ -116,21 +115,18 @@ $(document).ready(function () {
         });
     }
 
-    //Like post
     $(document).on("click", ".like-btn", function() {
 
         let postId = $(this).data("id");
         sendReaction(postId, "like");
     })
 
-    //Dislike post
     $(document).on("click", ".dislike-btn", function() {
 
         let postId = $(this).data("id");
         sendReaction(postId, "dislike");
     })
 
-    //function to send reaction
     function sendReaction(postId, reaction) {
         $.ajax({
             type: "POST",
@@ -149,14 +145,14 @@ $(document).ready(function () {
     }
 
 
-    //upload image trigger
     $("#addImage").on("click", function() {
         $("#uploadPostImage").click();
     })
 
+    
 
 
-    //Deleting the post
+
     $(document).on('click', ".delete-btn", function () {  
         let postId = $(this).data("id");
         let postCard = $(this).closest(".post-card");
@@ -183,7 +179,6 @@ $(document).ready(function () {
 
 
 
-
 document.getElementById("uploadPostImage").addEventListener('change', function (e) {
     let file = e.target.files[0];
     let preview = document.getElementById("imagePreview");
@@ -201,18 +196,29 @@ document.getElementById("uploadPostImage").addEventListener('change', function (
     }
 })
 
+
 document.getElementById("removeImage").addEventListener("click", function () {
     let fileInput = document.getElementById("uploadPostImage");
     let preview = document.getElementById("imagePreview");
     let container = document.getElementById("imagePreviewContainer");
 
-    fileInput.value = ""; // Reset file input
-    preview.src = ""; // Clear preview source
-    container.style.display = "none"; // Hide the container
+    fileInput.value = "";
+    preview.src = ""; 
+    container.style.display = "none"; 
 
 });
 
 function autoResize(textarea) {
-    textarea.style.height = "auto"; // Reset height to auto to recalculate
-    textarea.style.height = textarea.scrollHeight + "px"; // Set new height based on content
+    textarea.style.height = "auto"; 
+    textarea.style.height = textarea.scrollHeight + "px"; 
+}
+
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function () {  
+        const preview = document.getElementById("preview");
+        preview.src = reader.result;
+    };
+
+    reader.readAsDataURL(event.target.files[0]);
 }

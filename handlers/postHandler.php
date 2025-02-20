@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $userId = $_SESSION['user_id'];
 
-//For creating post
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['post_id'])) {
     $description = isset($_POST['description']) ? trim($_POST['description']) : "";
     $post_image = NULL;
@@ -43,11 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['post_id'])) {
         echo json_encode(["status" => "error", "message" => "Failed to create post: " . $stmt->error]);
     }
     exit;
+
+    $stmt->close();
+    $conn->close();
 }
 
-//For fetching all posts
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $stmt = $conn->prepare("SELECT posts.*, users.fullname, users.profile_picture FROM posts JOIN users ON posts.user_id = users.id where users.id = ? ORDER BY posts.created_at desc");
+    $stmt = $conn->prepare("SELECT posts.*, users.fullname, users.profile_picture FROM posts JOIN users ON posts.user_id = users.id where user_id = ? ORDER BY posts.created_at desc");
     $stmt->bind_param('i', $userId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -55,14 +58,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     echo json_encode($posts);
     exit;
+
+    $stmt->close();
+    $conn->close();
 }
 
-// Handling likes and dislikes
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($_POST['reaction'])) {
     $postId = $_POST['post_id'];
     $reaction = $_POST['reaction'];
 
-    // Check if user already reacted
     $stmt = $conn->prepare("SELECT reaction FROM post_reaction WHERE user_id = ? AND post_id = ?");
     $stmt->bind_param('ii', $userId, $postId);
     $stmt->execute();
@@ -71,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($
 
     if ($existingReaction) {
         if ($existingReaction['reaction'] === $reaction) {
-            // Remove reaction if clicked again
             $stmt = $conn->prepare("DELETE FROM post_reaction WHERE user_id = ? AND post_id = ?");
             $stmt->bind_param('ii', $userId, $postId);
             $stmt->execute();
@@ -79,7 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($
             $updateField = ($reaction === 'like') ? "likes" : "dislikes";
             $conn->query("UPDATE posts SET $updateField = GREATEST($updateField - 1, 0) WHERE id = $postId");
         } else {
-            // Update reaction if different reaction is clicked
             $stmt = $conn->prepare("UPDATE post_reaction SET reaction = ? WHERE user_id = ? AND post_id = ?");
             $stmt->bind_param('sii', $reaction, $userId, $postId);
             $stmt->execute();
@@ -91,7 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($
             }
         }
     } else {
-        // Insert new reaction
         $stmt = $conn->prepare("INSERT INTO post_reaction (user_id, post_id, reaction) VALUES (?, ?, ?)");
         $stmt->bind_param("iis", $userId, $postId, $reaction);
         $stmt->execute();
@@ -102,9 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id']) && isset($
 
     echo json_encode(["status" => "success", "message" => "Reaction updated"]);
     exit;
+
+    $stmt->close();
+    $conn->close();
 }
 
-//for DELETING posts
+
 if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
     $postId = $_POST['post_id'];
     
@@ -115,7 +120,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
     $post = $result->fetch_assoc();
 
     if($post) {
-        //now delete the post
         $stmt = $conn->prepare("DELETE from posts where id = ?");
         $stmt->bind_param("i", $postId);
         if($stmt->execute()) {
@@ -129,4 +133,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_id'])) {
         echo json_encode(["status" => "error", "message" => "Unauthorized action (Cannot delete someones post)"]);
         exit;
     }
+
+    $stmt->close();
+    $conn->close();
 }

@@ -7,6 +7,10 @@
 }
 
 
+body{
+    background-color: #e9ebee;
+}
+
 /* Container Layout */
 .container {
     display: flex;
@@ -14,6 +18,7 @@
     gap: 20px;
     padding: 20px;
     background-color: #e9ebee;
+    height: fit-content;
 }
 
 /* Profile Section */
@@ -46,13 +51,18 @@
 .edit-icon {
     position: absolute;
     bottom: 0;
-    right: 0;
-    background: #007bff;
-    color: white;
-    padding: 5px 10px;
-    font-size: 12px;
+    background: transparent;
+    color: #007bff;
+    padding: 2px 8px;
+    font-size: large;
     border-radius: 50%;
     cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+}
+
+.edit-icon:hover{
+    color: #0052a3;
 }
 
 .profile-card input {
@@ -305,6 +315,10 @@ textarea {
     cursor: pointer;
 }
 
+.add-image-label:hover{
+    color: #0052a3;
+}
+
 #imagePreview{
     height: 300px;
     width: 560px;
@@ -313,4 +327,18 @@ textarea {
 
 #postContent{
     overflow: hidden;
+}
+
+
+.name-date-section{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: baseline;
+}
+
+.name-date-section .createdAt{
+    font-size: smaller;
+    font-weight: normal;
+    color: rgba(0, 0, 0, 0.699);
 }
