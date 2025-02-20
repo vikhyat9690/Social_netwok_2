@@ -76,7 +76,8 @@ $age = dateToAge($dob);
             <div class="post-form">
                 <div class="logout-container">
                     <h3>Add Post</h3>
-                    <span><button type="submit" id="logoutBtn"><a href="../handlers/logout.php">Logout</a></button></span>
+                    <span><button type="submit" id="logoutBtn"><a href="../handlers/logout.php"><i class="fa fa-sign-out" aria-hidden="true"></i>
+                    </a></button></span>
                 </div>
                 <form action="../handlers/postHandler.php" method="post" id="postForm" enctype="multipart/form-data">
                     <textarea name="description" id="postContent" oninput="autoResize(this)" placeholder="What's on your mind?"></textarea>
@@ -85,7 +86,8 @@ $age = dateToAge($dob);
                             <label class="add-image-label" id="addImage"><i class="fa-regular fa-image"></i> Add Image</label>
                             <input type="file" accept="image/*" name="post_image" class="postImageInput" style="display: none;" id="uploadPostImage">
                         </div>
-                        <button id="postSubmitBtn" class="post-btn" type="submit">Post</button>
+                        <button id="postSubmitBtn" class="post-btn" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                        </button>
                     </div>
                     <div id="imagePreviewContainer">
                         <img src="" alt="" style="display: none;" id="imagePreview">

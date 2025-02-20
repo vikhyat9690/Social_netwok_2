@@ -209,10 +209,15 @@ textarea {
     background-color: rgba(140, 3, 3, 0.869);
 }
 
-#logoutBtn a{
+#logoutBtn{
     color: white;
     text-decoration: none;
-    font-weight: bold;
+    width: 60px;
+    cursor: pointer;
+}
+
+#logoutBtn i{
+    color: white;
 }
 
 .ageContainer{
@@ -313,6 +318,7 @@ textarea {
     color: #007bff;
     font-weight: bold;
     cursor: pointer;
+
 }
 
 .add-image-label:hover{
@@ -341,4 +347,9 @@ textarea {
     font-size: smaller;
     font-weight: normal;
     color: rgba(0, 0, 0, 0.699);
+}
+
+#postSubmitBtn{
+    width: 60px;
+    margin-top: 5px;
 }
